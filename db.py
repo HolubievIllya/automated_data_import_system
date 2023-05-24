@@ -3,8 +3,10 @@ import os
 from dotenv import load_dotenv
 from load_excel import *
 from calculations import *
+import openpyxl
 
 load_dotenv()
+
 
 class FirstDb:
     def __init__(self):
@@ -285,10 +287,59 @@ class FirstDb:
                 )
                 self.connection.commit()
 
-# db = FirstDb()
-# db.get_list_of_colnames()
-# db.insert_arithmetic(amount_n((read_column_by_colname("Лист Microsoft Excel.xlsx", read_excel_columnames("Лист Microsoft Excel.xlsx")[2]))),read_excel_columnames("Лист Microsoft Excel.xlsx")[2], average(read_column_by_colname("Лист Microsoft Excel.xlsx", read_excel_columnames("Лист Microsoft Excel.xlsx")[2])))
-# db.insert_arithmetic(read_excel_columnames("Лист Microsoft Excel.xlsx")[3], average(read_column_by_colname("Лист Microsoft Excel.xlsx", read_excel_columnames("Лист Microsoft Excel.xlsx")[3])))
-# db.insert_minimal(amount_n((read_column_by_colname("Лист Microsoft Excel.xlsx", read_excel_columnames("Лист Microsoft Excel.xlsx")[2]))),read_excel_columnames("Лист Microsoft Excel.xlsx")[2], minimal(read_column_by_colname("Лист Microsoft Excel.xlsx", read_excel_columnames("Лист Microsoft Excel.xlsx")[2])))
-# db.insert_variation(amount_n((read_column_by_colname("Лист Microsoft Excel.xlsx", read_excel_columnames("Лист Microsoft Excel.xlsx")[2]))),read_excel_columnames("Лист Microsoft Excel.xlsx")[2], variation(read_column_by_colname("Лист Microsoft Excel.xlsx", read_excel_columnames("Лист Microsoft Excel.xlsx")[2])))
-# db.insert_error(amount_n((read_column_by_colname("Лист Microsoft Excel.xlsx", read_excel_columnames("Лист Microsoft Excel.xlsx")[2]))),read_excel_columnames("Лист Microsoft Excel.xlsx")[2], std_error(read_column_by_colname("Лист Microsoft Excel.xlsx", read_excel_columnames("Лист Microsoft Excel.xlsx")[2])))
+    def get_rand_excel(self):
+        with self.connection.cursor() as cursor:
+            cursor.execute("""SELECT * FROM rand""")
+            results = cursor.fetchall()
+            book = openpyxl.Workbook()
+            sheet = book.active
+            k = 1
+            for row in [
+                "Кількість елементів",
+                "Показник",
+                "Середнє арифметичне",
+                "Мінімальне значення",
+                "Максимальне значення",
+                "Середньоквадратичне відхилення по вибірці",
+                "Коефіцієнт варіації",
+                "Помилка середнього",
+            ]:
+                cell = sheet.cell(row=1, column=k)
+                cell.value = row
+                k += 1
+            i = 1
+            for row in results:
+                i += 1
+                j = 1
+                for col in row:
+                    cell = sheet.cell(row=i, column=j)
+                    cell.value = col
+                    j += 1
+            book.save("rand.xlsx")
+
+    def get_rand2_excel(self):
+        with self.connection.cursor() as cursor:
+            cursor.execute("""SELECT * FROM rand2""")
+            results = cursor.fetchall()
+            book = openpyxl.Workbook()
+            sheet = book.active
+            k = 1
+            for row in [
+                "Кількість елементів",
+                "Показник",
+                "Коваріація",
+                "Коефіцієнт кореляції Пірсона",
+                "Т-критерий Стюдента",
+            ]:
+                cell = sheet.cell(row=1, column=k)
+                cell.value = row
+                k += 1
+            i = 1
+            for row in results:
+                i += 1
+                j = 1
+                for col in row:
+                    cell = sheet.cell(row=i, column=j)
+                    cell.value = col
+                    j += 1
+            book.save("rand2.xlsx")
