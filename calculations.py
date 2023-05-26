@@ -54,6 +54,10 @@ def pearson(data_x: list, data_y: list) -> float:
     return corr_coeff
 
 
-def t_test(data_x: list, data_y: list) -> float:
+def t_test(data_x: list, data_y: list) -> str:
     t_statistic, p_value = ttest_ind(data_x, data_y)
-    return t_statistic
+    res = str(t_statistic) + ", " + str(p_value)
+    return res
+
+print(t_test([3, 4, 2], [5, 3, 1]))
+print(10e+8)

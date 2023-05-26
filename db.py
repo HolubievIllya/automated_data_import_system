@@ -211,7 +211,7 @@ class FirstDb:
                 measure TEXT,
                 covariance double precision,
                 pearson double precision,
-                t_test double precision);"""
+                t_test varchar);"""
             )
         return "Таблиця готова до роботи"
 
