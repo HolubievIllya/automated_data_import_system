@@ -19,6 +19,7 @@ class FirstDb:
         )
         self.create_first_table()
         self.create_second_table()
+        self.create_users_table()
 
     def create_first_table(self):
         with self.connection.cursor() as cursor:
@@ -32,6 +33,15 @@ class FirstDb:
                 deviation double precision,
                 variation double precision,
                 error double precision);"""
+            )
+        return "Таблиця готова до роботи"
+
+    def create_users_table(self):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                """CREATE TABLE IF NOT EXISTS users (
+                login varchar,
+                password varchar);"""
             )
         return "Таблиця готова до роботи"
 
@@ -50,6 +60,24 @@ class FirstDb:
             result = cursor.fetchall()
         return bool(len(result))
 
+    def check_if_excists_login(self, login):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                """SELECT login FROM users WHERE login = %s;""",
+                (login,),
+            )
+            result = cursor.fetchall()
+        return bool(len(result))
+
+    def check_if_excists_password(self, password):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                """SELECT password FROM users WHERE password = %s;""",
+                (password,),
+            )
+            result = cursor.fetchall()
+        return bool(len(result))
+
     def check_if_exists_measure1(self, measure):
         with self.connection.cursor() as cursor:
             cursor.execute(
@@ -58,6 +86,17 @@ class FirstDb:
             )
             result = cursor.fetchall()
         return bool(len(result))
+
+    def insert_new_user(self, login, password):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                """INSERT INTO users (login, password) VALUES (%s, %s)""",
+                (
+                    login,
+                    password,
+                ),
+            )
+            self.connection.commit()
 
     def insert_arithmetic(self, amount, measure, value):
         if not self.check_if_exists_measure(measure):

@@ -31,6 +31,7 @@ class Prog:
     funcs_dict = {}
     func_value = IntVar()
     data_x = []
+    names_dict = {}
 
     def __init__(self):
         self.start()
@@ -105,7 +106,7 @@ class Prog:
         Canvas(self.window, height=1, width=900, bg="yellow").pack()
         Label(
             self.window,
-            text=f"{Prog.excel_columnames}",
+            text=f"{Prog.excel_columnames[1:]}",
             bg="#DDCE84",
             font=("Helvetica bold", 10),
         ).pack()
@@ -125,11 +126,78 @@ class Prog:
             font=("Helvetica bold", 10),
             bg="#FFF9DB",
         ).pack()
+        Button(
+            self.window,
+            text="Звіт",
+            command=self.zvit_wind,
+            font=("Helvetica bold", 10),
+            bg="#FFF9DB",
+        ).pack()
+
+    def zvit_wind(self):
+        win_zvit = Toplevel(self.window)
+        win_zvit.wm_title("Вставити файл")
+        win_zvit["bg"] = "#DDCE84"
+        Label(
+            win_zvit,
+            text=f"{read_column_by_colname_names(Prog.file_path, Prog.excel_columnames[0])}",
+            bg="#DDCE84",
+            font=("Helvetica bold", 10),
+        ).pack()
+        Label(
+            win_zvit,
+            text=f"Введіть ім'я пацієнта",
+            bg="#DDCE84",
+            font=("Helvetica bold", 12),
+        ).pack()
+        patient_entry = Entry(win_zvit)
+        patient_entry.insert(0, Prog.pokaz_entry)
+        patient_entry.pack()
+        Button(
+            win_zvit,
+            text="Ок",
+            command=lambda: self.show2(patient_entry),
+            font=("Helvetica bold", 10),
+            bg="#FFF9DB",
+        ).pack()
+
+    def show2(self, patient_entry):
+        Prog.names_dict = dict(
+            zip(
+                list(
+                    read_column_by_colname_names(
+                        Prog.file_path, Prog.excel_columnames[0]
+                    )
+                ),
+                list(
+                    range(
+                        len(
+                            read_column_by_colname_names(
+                                Prog.file_path, Prog.excel_columnames[0]
+                            )
+                        )
+                    )
+                ),
+            )
+        )
+        patient_entry = patient_entry.get()
+        res = f"Ім'я: {patient_entry}\n\n"
+        for i in read_excel_columnames(Prog.file_path)[1:]:
+            res += f"{i}: {read_column_by_colname(Prog.file_path, i)[Prog.names_dict[patient_entry]]}\n\n"
+        showinfo("Звіт", f"{res}")
 
     @Decorators
     def show(self, pokaz_entry):
         Prog.pokaz_entry = pokaz_entry.get()
         if Prog.funcs_dict[Prog.func_value.get()] == "Середнє арифметичне":
+            value = average(
+                read_column_by_colname(
+                    Prog.file_path,
+                    read_excel_columnames(Prog.file_path)[
+                        Prog.excel_columnames_dict[Prog.pokaz_entry]
+                    ],
+                )
+            )
             Prog.db.insert_arithmetic(
                 amount=amount_n(
                     read_column_by_colname(
@@ -140,16 +208,13 @@ class Prog:
                     )
                 ),
                 measure=Prog.pokaz_entry,
-                value=average(
-                    read_column_by_colname(
-                        Prog.file_path,
-                        read_excel_columnames(Prog.file_path)[
-                            Prog.excel_columnames_dict[Prog.pokaz_entry]
-                        ],
-                    )
-                ),
+                value=value,
             )
             Prog.db.get_rand_excel()
+            showinfo(
+                "Звіт",
+                f"Показник: {Prog.pokaz_entry}\nЗначення: {value}\nУспішно внесено в базу даних",
+            )
         elif Prog.funcs_dict[Prog.func_value.get()] == "Мінімальне значення":
             Prog.db.insert_minimal(
                 amount=amount_n(
@@ -359,7 +424,3 @@ class Prog:
         self.rad_button()
         self.widgets()
         Prog.window.mainloop()
-
-
-p = Prog()
-p.start()
