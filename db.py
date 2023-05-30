@@ -134,6 +134,16 @@ class FirstDb:
             colnames = [desc[0] for desc in cursor.description]
         print(colnames)
 
+
+    def check_if_excists_user(self, login):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                """SELECT login FROM full_info_users WHERE login = %s;""",
+                (login,),
+            )
+            result = cursor.fetchall()
+        return bool(len(result))
+
     def check_if_exists_measure(self, measure):
         with self.connection.cursor() as cursor:
             cursor.execute(

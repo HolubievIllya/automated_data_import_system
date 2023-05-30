@@ -153,8 +153,11 @@ class Users:
 
     def validate(self, name, age, ap, height, weight, bloodgroup, bloodsugar, ats, atd, pat, ataverage, breathlessness, indketle, indkerdo):
         try:
-            self.db.insert_user_login(name.get(), age.get(), ap.get(), float(height.get()), float(weight.get()), bloodgroup.get(), float(bloodsugar.get()), ats.get(), atd.get(), pat.get(), float(ataverage.get()), breathlessness.get(), float(indketle.get()), float(indkerdo.get()), self.login)
-            self.db.insert_user(name.get(), age.get(), ap.get(), float(height.get()), float(weight.get()), bloodgroup.get(), float(bloodsugar.get()), ats.get(), atd.get(), pat.get(), float(ataverage.get()), breathlessness.get(), float(indketle.get()), float(indkerdo.get()))
+            if self.db.check_if_excists_user(self.login):
+                showinfo("Помилка", "Ви вже записали свої дані")
+            else:
+                self.db.insert_user_login(name.get(), age.get(), ap.get(), float(height.get()), float(weight.get()), bloodgroup.get(), float(bloodsugar.get()), ats.get(), atd.get(), pat.get(), float(ataverage.get()), breathlessness.get(), float(indketle.get()), float(indkerdo.get()), self.login)
+                self.db.insert_user(name.get(), age.get(), ap.get(), float(height.get()), float(weight.get()), bloodgroup.get(), float(bloodsugar.get()), ats.get(), atd.get(), pat.get(), float(ataverage.get()), breathlessness.get(), float(indketle.get()), float(indkerdo.get()))
         except ValueError:
             showinfo("Помилка", "Введіть числа через точку")
 
