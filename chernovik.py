@@ -48,6 +48,9 @@ class Prog:
                 showinfo("Помилка", "Ви ввели недостатньо значень")
             except ValueError:
                 showinfo("Помилка", "Вибірки мають бути однакової довжини")
+            except TypeError:
+                showinfo("Помилка", "В файлі неоректний формат даних")
+
 
         return inner
 
@@ -133,7 +136,30 @@ class Prog:
             font=("Helvetica bold", 10),
             bg="#FFF9DB",
         ).pack()
+        Button(
+            self.window,
+            text="Записати файл в базу",
+            command=self.insertion,
+            font=("Helvetica bold", 10),
+            bg="#FFF9DB",
+        ).pack()
+        Button(
+            self.window,
+            text="Отримати повний звіт",
+            command=self.get_zvit,
+            font=("Helvetica bold", 10),
+            bg="#FFF9DB",
+        ).pack()
 
+    @Decorators
+    def get_zvit(self):
+        self.db.get_full_zvit()
+
+    @Decorators
+    def insertion(self):
+        self.db.insert_full_excel(self.file_path)
+
+    @Decorators
     def zvit_wind(self):
         win_zvit = Toplevel(self.window)
         win_zvit.wm_title("Вставити файл")
@@ -161,6 +187,7 @@ class Prog:
             bg="#FFF9DB",
         ).pack()
 
+    @Decorators
     def show2(self, patient_entry):
         Prog.names_dict = dict(
             zip(

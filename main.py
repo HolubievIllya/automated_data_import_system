@@ -12,6 +12,8 @@ class Test:
     db = FirstDb()
     log = False
     pas = False
+    admin_rights = False
+    login = ""
 
     def __init__(self):
         self.start()
@@ -91,6 +93,17 @@ class Test:
                 self.tkWindow.destroy()
                 self.log = True
                 self.pas = True
+                self.admin_rights = False
+                self.login = username.get()
+                print(self.login, self.log, self.pas)
+            else:
+                showinfo("Помилка", "Ви ввели некоректний пароль")
+        elif self.db.check_if_exists_login_adm(username.get()):
+            if self.db.check_if_exists_password_adm(password.get()):
+                self.tkWindow.destroy()
+                self.log = True
+                self.pas = True
+                self.admin_rights = True
             else:
                 showinfo("Помилка", "Ви ввели некоректний пароль")
         else:
@@ -98,7 +111,9 @@ class Test:
 
 
 b = Test()
-if b.log and b.pas:
+if b.log and b.pas and b.admin_rights:
     from chernovik import Prog
-
     p = Prog()
+elif b.log and b.pas and not b.admin_rights:
+    from chernovik_user import Users
+    u = Users(b.login)
