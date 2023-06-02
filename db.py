@@ -171,6 +171,16 @@ class FirstDb:
             result = cursor.fetchall()
         return bool(len(result))
 
+    def check_if_user_data_exists(self, login):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                """SELECT login FROM full_info_users WHERE login = %s;""",
+                (login,),
+            )
+            result = cursor.fetchall()
+        return bool(len(result))
+
+
     def check_if_exists_login_adm(self, login):
         with self.connection.cursor() as cursor:
             cursor.execute(
@@ -522,3 +532,11 @@ class FirstDb:
                     j += 1
             book.save("rand2.xlsx")
 
+
+    def get_list_all(self, value):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                """SELECT * FROM full_info_excel;"""
+            )
+            result = cursor.fetchall()
+        return [i[value] for i in result]

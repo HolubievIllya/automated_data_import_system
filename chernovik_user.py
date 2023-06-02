@@ -8,8 +8,8 @@ class Users:
     window = Tk()
     db = FirstDb()
     window["bg"] = "#DDCE84"
-    window.title("Програма!")
-    window.geometry("750x450+350+125")
+    window.title("Програмний застосунок!")
+    window.geometry("350x350+350+125")
 
 
     def __init__(self, login):
@@ -20,7 +20,7 @@ class Users:
     def main_window(self):
         Label(
             self.window,
-            text=f"Вітаємо!",
+            text=f"Вітаємо, {self.login}!",
             bg="#DDCE84",
             font=("Helvetica bold", 15),
         ).pack(padx=15, pady=20)
@@ -31,7 +31,7 @@ class Users:
             font=("Helvetica bold", 13),
             bg="#FFF9DB",
             height=3,
-            width=15
+            width=20
         ).pack(padx=15, pady=20)
         Button(
             self.window,
@@ -42,7 +42,24 @@ class Users:
             height=3,
             width=20
         ).pack(padx=15, pady=20)
-
+        if self.db.check_if_user_data_exists(self.login):
+            Label(
+                self.window,
+                text=f"Ваші дані вже внесені",
+                bg="#DDCE84",
+                font=("Helvetica bold", 15),
+            ).place(relx = 0.0,
+                 rely = 1.0,
+                 anchor ='sw')
+        else:
+            Label(
+                self.window,
+                text=f"Ви ще не внесли свої дані",
+                bg="#DDCE84",
+                font=("Helvetica bold", 12),
+            ).place(relx=0.0,
+                    rely=1.0,
+                    anchor='sw')
     def apply(self):
         win_reg = Toplevel(self.window)
         win_reg.wm_title("Внесення даних")
@@ -189,3 +206,7 @@ class Users:
     def start(self):
         self.main_window()
         self.window.mainloop()
+
+
+
+u = Users("dsa")

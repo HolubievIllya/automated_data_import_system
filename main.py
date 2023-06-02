@@ -2,7 +2,22 @@ from tkinter import *
 from functools import partial
 from tkinter.messagebox import showinfo
 from db import FirstDb
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+s = FirstDb()
 
+
+
+scopes = [
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive"
+        ]
+
+creds = ServiceAccountCredentials.from_json_keyfile_name("data-project.json", scopes=scopes)
+file = gspread.authorize(creds)
+workbook = file.open("data_file")
+sheet = workbook.sheet1
+users = [i for i in sheet.get_all_records()]
 
 class Test:
     tkWindow = Tk()
@@ -113,7 +128,15 @@ class Test:
 b = Test()
 if b.log and b.pas and b.admin_rights:
     from chernovik import Prog
+    if len(users) != 0:
+        for i in users:
+            s.insert_user(i["Введіть ім'я"], i['Введіть вік'], i['Введіть АП'], i['Введіть зріст'], i['Введіть вагу'], i['Введіть групу крові'], i['Введіть цукор крові'], i['Введіть АТС'], i['Введіть АТД'], i['Введіть ПАТ'], i['Введіть Атсер'], i['Введіть затримку дихання'], i['Введіть індекс Кетле'], i['Введіть індекс Кердо'])
+            sheet.delete_row(2)
+    else:
+        print("nothing")
     p = Prog()
 elif b.log and b.pas and not b.admin_rights:
     from chernovik_user import Users
     u = Users(b.login)
+
+

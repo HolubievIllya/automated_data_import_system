@@ -10,11 +10,11 @@ def standard_deviation(data: list) -> float:
     sm = 0
     for i in data:
         sm += (i - average(data)) ** 2
-    return math.sqrt(sm / (len(data) - 1))
+    return round(math.sqrt(sm / (len(data) - 1)), 2)
 
 
 def average(data: list) -> float:
-    return sum(data) / len(data)
+    return round(sum(data) / len(data), 2)
 
 
 def minimal(data: list) -> float:
@@ -30,15 +30,15 @@ def deviation(data: list) -> float:
     x = average(data)
     for i in data:
         res += (i - x) ** 2
-    return (res / len(data)) ** 0.5
+    return round((res / len(data)) ** 0.5, 2)
 
 
 def variation(data: list) -> float:
-    return deviation(data) / average(data) * 100
+    return round(deviation(data) / average(data) * 100, 2)
 
 
 def std_error(data: list) -> float:
-    return standard_deviation(data) / math.sqrt(len(data))
+    return round(standard_deviation(data) / math.sqrt(len(data)), 2)
 
 
 def covariance(data_x: list, data_y: list) -> float:
@@ -46,15 +46,16 @@ def covariance(data_x: list, data_y: list) -> float:
     mean_y = average(data_y)
     sub_x = [i - mean_x for i in data_x]
     sub_y = [i - mean_y for i in data_y]
-    return sum([sub_x[i] * sub_y[i] for i in range(len(sub_x))]) / (len(data_x) - 1)
+    return round(sum([sub_x[i] * sub_y[i] for i in range(len(sub_x))]) / (len(data_x) - 1), 2)
 
 
 def pearson(data_x: list, data_y: list) -> float:
     corr_coeff, p_value = pearsonr(data_x, data_y)
-    return corr_coeff
+    return round(corr_coeff, 2)
 
 
 def t_test(data_x: list, data_y: list) -> str:
     t_statistic, p_value = ttest_ind(data_x, data_y)
-    res = str(t_statistic) + ", " + str(p_value)
+    res = str(round(t_statistic, 2)) + ", " + str(round(p_value, 2))
     return res
+
