@@ -3,6 +3,8 @@ from tkinter import *
 from tkinter.messagebox import showinfo
 from tkinter import Tk, Label, Button, Checkbutton, IntVar
 from db import FirstDb
+from prettytable import PrettyTable
+from datetime import date
 
 class Users:
     window = Tk()
@@ -180,7 +182,33 @@ class Users:
 
     def hello(self):
         try:
+            todays_date = date.today()
+            table = PrettyTable()
             res = self.db.get_user_info(self.login)
+            table.field_names = ["         Найменування показників         ", "            Результат           "]
+            table.add_row(["АП", f"{res[0][2]}"])
+            table.add_row(["Зріст", f"{res[0][3]}"])
+            table.add_row(["Вага", f"{res[0][4]}"])
+            table.add_row(["Група крові", f"{res[0][5]}"])
+            table.add_row(["Цукор крові", f"{res[0][6]}"])
+            table.add_row(["АТС", f"{res[0][7]}"])
+            table.add_row(["АТД", f"{res[0][8]}"])
+            table.add_row(["ПАТ", f"{res[0][9]}"])
+            table.add_row(["Атсер", f"{res[0][10]}"])
+            table.add_row(["Затримка дихання", f"{res[0][11]}"])
+            table.add_row(["Індекс Кетле", f"{res[0][12]}"])
+            table.add_row(["Індекс Кердо", f"{res[0][13]}"])
+            table.align["Колонка 1"] = "l"
+            table.align["Колонка 2"] = "l"
+            with open(f"Картка пацієнта.txt", "w", encoding="utf-16") as new_data:
+                new_data.write("\t\t\t\tКартка пацієта\t\t\t\t\n"
+                               f"{'-' * 80}\n"
+                               f"\t\t\t\tдата {todays_date}\t\t\t\t\n"
+                               f"\t\t\t{'-' * 32}\t\t\t\n"
+                               f"\t\t\tІм'я: {res[0][0]}\t\t\tВік: {res[0][1]}\t\t\t\t\n"
+                               f"{'-' * 80}\n"
+                               f"\t\t\tЗаклад:\t\t\t\tВідділення:\t\t\t\t\n"
+                               f'{table.get_string()}')
             showinfo("Звіт", f"Ім'я: {res[0][0]}\n"
                              f"Вік: {res[0][1]}\n"
                              f"АП: {res[0][2]}\n"
@@ -207,6 +235,3 @@ class Users:
         self.main_window()
         self.window.mainloop()
 
-
-
-u = Users("dsa")

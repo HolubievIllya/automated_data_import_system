@@ -51,7 +51,7 @@ class Prog:
             except ValueError:
                 showinfo("Помилка", "Вибірки мають бути однакової довжини")
             except TypeError:
-                showinfo("Помилка", "В файлі неоректний формат даних")
+                showinfo("Помилка", "В файлі некоректний формат даних")
 
 
         return inner
@@ -169,7 +169,7 @@ class Prog:
     @Decorators
     def zvit_wind(self):
         win_zvit = Toplevel(self.window)
-        win_zvit.wm_title("Вставити файл")
+        win_zvit.wm_title("Меню формування звіту")
         win_zvit["bg"] = "#DDCE84"
         Label(
             win_zvit,

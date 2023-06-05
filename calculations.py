@@ -50,7 +50,7 @@ def covariance(data_x: list, data_y: list) -> float:
 
 
 def pearson(data_x: list, data_y: list) -> float:
-    corr_coeff, p_value = pearsonr(data_x, data_y)
+    corr_coeff = pearsonr(data_x, data_y)
     return round(corr_coeff, 2)
 
 
