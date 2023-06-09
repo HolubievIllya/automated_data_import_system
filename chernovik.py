@@ -5,6 +5,9 @@ from tkinter import Tk, Label, Button, Checkbutton, IntVar
 from load_excel import *
 from calculations import *
 from db import FirstDb
+from prettytable import PrettyTable
+from datetime import date
+# -*- coding: utf8 -*-
 
 
 class Prog:
@@ -215,10 +218,39 @@ class Prog:
             )
         )
         patient_entry = patient_entry.get()
-        res = f"Ім'я: {patient_entry}\n\n"
+        res = patient_entry
+        todays_date = date.today()
+        values = []
         for i in read_excel_columnames(Prog.file_path)[1:]:
-            res += f"{i}: {read_column_by_colname(Prog.file_path, i)[Prog.names_dict[patient_entry]]}\n\n"
-        showinfo("Звіт", f"{res}")
+            values.append(read_column_by_colname(Prog.file_path, i)[Prog.names_dict[patient_entry]])
+            # res += f"{i}: {read_column_by_colname(Prog.file_path, i)[Prog.names_dict[patient_entry]]}\n\n"
+            # print(read_column_by_colname(Prog.file_path, i)[Prog.names_dict[patient_entry]])
+            # print(values)
+        table = PrettyTable()
+        table.field_names = ["         Найменування показників         ", "            Результат           "]
+        table.add_row(["АП", f"{values[1]}"])
+        table.add_row(["Зріст", f"{values[2]}"])
+        table.add_row(["Вага", f"{values[3]}"])
+        table.add_row(["Група крові", f"{values[4]}"])
+        table.add_row(["Цукор крові", f"{values[5]}"])
+        table.add_row(["АТС", f"{values[6]}"])
+        table.add_row(["АТД", f"{values[7]}"])
+        table.add_row(["ПАТ", f"{values[8]}"])
+        table.add_row(["Атсер", f"{values[9]}"])
+        table.add_row(["Затримка дихання", f"{values[10]}"])
+        table.add_row(["Індекс Кетле", f"{values[11]}"])
+        table.add_row(["Індекс Кердо", f"{values[12]}"])
+        table.align["Колонка 1"] = "l"
+        table.align["Колонка 2"] = "l"
+        with open(f"Картка пацієнта_{res}.txt", "w", encoding="utf-16") as new_data:
+            new_data.write("\t\t\t\tКартка пацієта\t\t\t\t\n"
+                               f"{'-' * 80}\n"
+                               f"\t\t\t\tдата {todays_date}\t\t\t\t\n"
+                               f"\t\t\t{'-' * 32}\t\t\t\n"
+                               f"\t\t\tІм'я: {res}\t\t\tВік: {values[0]}\t\t\t\t\n"
+                               f"{'-' * 80}\n"
+                               f"\t\t\tЗаклад:\t\t\t\tВідділення:\t\t\t\t\n"
+                                f'{table.get_string()}')
 
     @Decorators
     def show(self, pokaz_entry):

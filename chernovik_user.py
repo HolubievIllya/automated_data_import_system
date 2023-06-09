@@ -200,7 +200,7 @@ class Users:
             table.add_row(["Індекс Кердо", f"{res[0][13]}"])
             table.align["Колонка 1"] = "l"
             table.align["Колонка 2"] = "l"
-            with open(f"Картка пацієнта.txt", "w", encoding="utf-16") as new_data:
+            with open(f"Картка пацієнта_{self.login}.txt", "w", encoding="utf-16") as new_data:
                 new_data.write("\t\t\t\tКартка пацієта\t\t\t\t\n"
                                f"{'-' * 80}\n"
                                f"\t\t\t\tдата {todays_date}\t\t\t\t\n"
@@ -209,20 +209,20 @@ class Users:
                                f"{'-' * 80}\n"
                                f"\t\t\tЗаклад:\t\t\t\tВідділення:\t\t\t\t\n"
                                f'{table.get_string()}')
-            showinfo("Звіт", f"Ім'я: {res[0][0]}\n"
-                             f"Вік: {res[0][1]}\n"
-                             f"АП: {res[0][2]}\n"
-                             f"Зріст: {res[0][3]}\n"
-                             f"Вага: {res[0][4]}\n"
-                             f"Група крові: {res[0][5]}\n"
-                             f"Цукор крові: {res[0][6]}\n"
-                             f"АТС: {res[0][7]}\n"
-                             f"АТД: {res[0][8]}\n"
-                             f"ПАТ: {res[0][9]}\n"
-                             f"Атсер: {res[0][10]}\n"
-                             f"Затримка дихання: {res[0][11]}\n"
-                             f"Індекс Кетле: {res[0][12]}\n"
-                             f"Індекс Кердо: {res[0][13]}\n")
+            # showinfo("Звіт", f"Ім'я: {res[0][0]}\n"
+            #                  f"Вік: {res[0][1]}\n"
+            #                  f"АП: {res[0][2]}\n"
+            #                  f"Зріст: {res[0][3]}\n"
+            #                  f"Вага: {res[0][4]}\n"
+            #                  f"Група крові: {res[0][5]}\n"
+            #                  f"Цукор крові: {res[0][6]}\n"
+            #                  f"АТС: {res[0][7]}\n"
+            #                  f"АТД: {res[0][8]}\n"
+            #                  f"ПАТ: {res[0][9]}\n"
+            #                  f"Атсер: {res[0][10]}\n"
+            #                  f"Затримка дихання: {res[0][11]}\n"
+            #                  f"Індекс Кетле: {res[0][12]}\n"
+            #                  f"Індекс Кердо: {res[0][13]}\n")
         except IndexError:
             showinfo("Помилка", "Ваші дані відсутні")
 
