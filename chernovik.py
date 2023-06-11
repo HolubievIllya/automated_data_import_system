@@ -2,9 +2,13 @@ from tkinter import *
 from tkinter.messagebox import showinfo
 from tkinter.ttk import *
 from tkinter import Tk, Label, Button, Checkbutton, IntVar
+
+import numpy as np
+
 from load_excel import *
 from calculations import *
 from db import FirstDb
+from matplotlib import pyplot as plt
 from prettytable import PrettyTable
 from datetime import date
 # -*- coding: utf8 -*-
@@ -476,29 +480,59 @@ class Prog:
                 Prog.db.get_rand2_excel()
         else:
             if Prog.func_value.get() == 0:
+                self.show_histo(self.db.get_list_all(self.bd_dict[pokaz_entry.get()]), pokaz_entry.get())
                 self.db.insert_arithmetic(len(self.db.get_list_all(self.bd_dict[pokaz_entry.get()])),pokaz_entry.get(), average(self.db.get_list_all(self.bd_dict[pokaz_entry.get()])))
             elif Prog.func_value.get() == 1:
+                self.show_histo(self.db.get_list_all(self.bd_dict[pokaz_entry.get()]), pokaz_entry.get())
                 self.db.insert_minimal(len(self.db.get_list_all(self.bd_dict[pokaz_entry.get()])),pokaz_entry.get(), minimal(self.db.get_list_all(self.bd_dict[pokaz_entry.get()])))
             elif Prog.func_value.get() == 2:
+                self.show_histo(self.db.get_list_all(self.bd_dict[pokaz_entry.get()]), pokaz_entry.get())
                 self.db.insert_maximal(len(self.db.get_list_all(self.bd_dict[pokaz_entry.get()])),pokaz_entry.get(), maximal(self.db.get_list_all(self.bd_dict[pokaz_entry.get()])))
             elif Prog.func_value.get() == 3:
+                self.show_histo(self.db.get_list_all(self.bd_dict[pokaz_entry.get()]), pokaz_entry.get())
                 self.db.insert_deviation(len(self.db.get_list_all(self.bd_dict[pokaz_entry.get()])),pokaz_entry.get(), deviation(self.db.get_list_all(self.bd_dict[pokaz_entry.get()])))
             elif Prog.func_value.get() == 4:
+                self.show_histo(self.db.get_list_all(self.bd_dict[pokaz_entry.get()]), pokaz_entry.get())
                 self.db.insert_variation(len(self.db.get_list_all(self.bd_dict[pokaz_entry.get()])),pokaz_entry.get(), variation(self.db.get_list_all(self.bd_dict[pokaz_entry.get()])))
             elif Prog.func_value.get() == 5:
+                self.show_histo(self.db.get_list_all(self.bd_dict[pokaz_entry.get()]), pokaz_entry.get())
                 self.db.insert_error(len(self.db.get_list_all(self.bd_dict[pokaz_entry.get()])),pokaz_entry.get(), std_error(self.db.get_list_all(self.bd_dict[pokaz_entry.get()])))
             elif Prog.func_value.get() == 6:
                 val = pokaz_entry.get().split(",")
+                res = str(val[0]) + " " + str(val[1])
+                self.cor_graph(self.db.get_list_all(self.bd_dict[val[0].strip()]),
+                               self.db.get_list_all(self.bd_dict[val[1].strip()]), res)
                 self.db.insert_covariance(len(self.db.get_list_all(self.bd_dict[val[0].strip()])), pokaz_entry.get(), covariance(self.db.get_list_all(self.bd_dict[val[0].strip()]), self.db.get_list_all(self.bd_dict[val[1].strip()])))
             elif Prog.func_value.get() == 7:
                 val = pokaz_entry.get().split(",")
+                res = str(val[0]) + " " + str(val[1])
+                self.cor_graph(self.db.get_list_all(self.bd_dict[val[0].strip()]), self.db.get_list_all(self.bd_dict[val[1].strip()]), res)
                 self.db.insert_pearson(len(self.db.get_list_all(self.bd_dict[val[0].strip()])), pokaz_entry.get(), pearson(self.db.get_list_all(self.bd_dict[val[0].strip()]), self.db.get_list_all(self.bd_dict[val[1].strip()])))
             elif Prog.func_value.get() == 8:
                 val = pokaz_entry.get().split(",")
+                res = str(val[0]) + " " + str(val[1])
+                self.cor_graph(self.db.get_list_all(self.bd_dict[val[0].strip()]),
+                               self.db.get_list_all(self.bd_dict[val[1].strip()]), res)
                 self.db.insert_t_test(len(self.db.get_list_all(self.bd_dict[val[0].strip()])), pokaz_entry.get(), t_test(self.db.get_list_all(self.bd_dict[val[0].strip()]), self.db.get_list_all(self.bd_dict[val[1].strip()])))
 
+    def show_histo(self, data, name):
+        plt.hist(data, bins=20, alpha=0.5)
+        plt.title('Гістограма')
+        plt.xlabel(f'{name}')
+        plt.ylabel('Кількість')
+        plt.savefig(f'Гістограма {name}.png')
+        plt.close()
 
-
+    def cor_graph(self, data_x, data_y, name):
+        correlation_matrix = np.corrcoef(data_x, data_y)
+        correlation = correlation_matrix[0, 1]
+        plt.scatter(data_x, data_y)
+        res = name.split()
+        plt.xlabel(f"{res[0]}")
+        plt.ylabel(f"{res[1]}")
+        plt.title('Кореляція: ' + str(round(correlation, 2)))
+        plt.savefig(f'Графік кореляції {name}.png')
+        plt.close()
 
 
 
