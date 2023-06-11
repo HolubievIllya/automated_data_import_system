@@ -261,6 +261,12 @@ class Prog:
         if self.flag:
             Prog.pokaz_entry = pokaz_entry.get()
             if Prog.funcs_dict[Prog.func_value.get()] == "Середнє арифметичне":
+                self.show_histo(read_column_by_colname(
+                            Prog.file_path,
+                            read_excel_columnames(Prog.file_path)[
+                                Prog.excel_columnames_dict[Prog.pokaz_entry]
+                            ],
+                        ), Prog.pokaz_entry)
                 value = average(
                     read_column_by_colname(
                         Prog.file_path,
@@ -287,6 +293,12 @@ class Prog:
                     f"Показник: {Prog.pokaz_entry}\nЗначення: {value}\nУспішно внесено в базу даних",
                 )
             elif Prog.funcs_dict[Prog.func_value.get()] == "Мінімальне значення":
+                self.show_histo(read_column_by_colname(
+                    Prog.file_path,
+                    read_excel_columnames(Prog.file_path)[
+                        Prog.excel_columnames_dict[Prog.pokaz_entry]
+                    ],
+                ), Prog.pokaz_entry)
                 Prog.db.insert_minimal(
                     amount=amount_n(
                         read_column_by_colname(
@@ -308,6 +320,12 @@ class Prog:
                 )
                 Prog.db.get_rand_excel()
             elif Prog.funcs_dict[Prog.func_value.get()] == "Максимальне значення":
+                self.show_histo(read_column_by_colname(
+                    Prog.file_path,
+                    read_excel_columnames(Prog.file_path)[
+                        Prog.excel_columnames_dict[Prog.pokaz_entry]
+                    ],
+                ), Prog.pokaz_entry)
                 Prog.db.insert_maximal(
                     amount=amount_n(
                         read_column_by_colname(
@@ -332,6 +350,12 @@ class Prog:
                 Prog.funcs_dict[Prog.func_value.get()]
                 == "Середньоквадратичне відхилення по вибірці"
             ):
+                self.show_histo(read_column_by_colname(
+                    Prog.file_path,
+                    read_excel_columnames(Prog.file_path)[
+                        Prog.excel_columnames_dict[Prog.pokaz_entry]
+                    ],
+                ), Prog.pokaz_entry)
                 Prog.db.insert_deviation(
                     amount=amount_n(
                         read_column_by_colname(
@@ -353,6 +377,12 @@ class Prog:
                 )
                 Prog.db.get_rand_excel()
             elif Prog.funcs_dict[Prog.func_value.get()] == "Коефіцієнт варіації":
+                self.show_histo(read_column_by_colname(
+                    Prog.file_path,
+                    read_excel_columnames(Prog.file_path)[
+                        Prog.excel_columnames_dict[Prog.pokaz_entry]
+                    ],
+                ), Prog.pokaz_entry)
                 Prog.db.insert_variation(
                     amount=amount_n(
                         read_column_by_colname(
@@ -374,6 +404,12 @@ class Prog:
                 )
                 Prog.db.get_rand_excel()
             elif Prog.funcs_dict[Prog.func_value.get()] == "Помилка середнього":
+                self.show_histo(read_column_by_colname(
+                    Prog.file_path,
+                    read_excel_columnames(Prog.file_path)[
+                        Prog.excel_columnames_dict[Prog.pokaz_entry]
+                    ],
+                ), Prog.pokaz_entry)
                 Prog.db.insert_error(
                     amount=amount_n(
                         read_column_by_colname(
@@ -396,6 +432,19 @@ class Prog:
                 Prog.db.get_rand_excel()
             elif Prog.funcs_dict[Prog.func_value.get()] == "Коваріація":
                 val = Prog.pokaz_entry.split(",")
+                res = str(val[0]) + " " + str(val[1])
+                self.cor_graph(read_column_by_colname(
+                            Prog.file_path,
+                            read_excel_columnames(Prog.file_path)[
+                                Prog.excel_columnames_dict[val[0].strip()]
+                            ],
+                        ),
+                    read_column_by_colname(
+                        Prog.file_path,
+                        read_excel_columnames(Prog.file_path)[
+                            Prog.excel_columnames_dict[val[1].strip()]
+                        ],
+                    ), res)
                 Prog.db.insert_covariance(
                     amount=amount_n(
                         read_column_by_colname(
@@ -424,6 +473,19 @@ class Prog:
                 Prog.db.get_rand2_excel()
             elif Prog.funcs_dict[Prog.func_value.get()] == "Коефіцієнт кореляції Пірсона":
                 val = Prog.pokaz_entry.split(",")
+                res = str(val[0]) + " " + str(val[1])
+                self.cor_graph(read_column_by_colname(
+                    Prog.file_path,
+                    read_excel_columnames(Prog.file_path)[
+                        Prog.excel_columnames_dict[val[0].strip()]
+                    ],
+                ),
+                    read_column_by_colname(
+                        Prog.file_path,
+                        read_excel_columnames(Prog.file_path)[
+                            Prog.excel_columnames_dict[val[1].strip()]
+                        ],
+                    ), res)
                 Prog.db.insert_pearson(
                     amount=amount_n(
                         read_column_by_colname(
@@ -452,6 +514,19 @@ class Prog:
                 Prog.db.get_rand2_excel()
             elif Prog.funcs_dict[Prog.func_value.get()] == "Т-критерий Стюдента":
                 val = Prog.pokaz_entry.split(",")
+                res = str(val[0]) + " " + str(val[1])
+                self.cor_graph(read_column_by_colname(
+                    Prog.file_path,
+                    read_excel_columnames(Prog.file_path)[
+                        Prog.excel_columnames_dict[val[0].strip()]
+                    ],
+                ),
+                    read_column_by_colname(
+                        Prog.file_path,
+                        read_excel_columnames(Prog.file_path)[
+                            Prog.excel_columnames_dict[val[1].strip()]
+                        ],
+                    ), res)
                 Prog.db.insert_t_test(
                     amount=amount_n(
                         read_column_by_colname(
