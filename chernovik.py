@@ -118,19 +118,17 @@ class Prog:
     @Decorators
     def rad_button(self):
         x = 0
-        for i in enumerate(self.funcs):
-            btn = Checkbutton(
-                text=f"{i[1]}",
-                variable=Prog.func_value,
-                onvalue=x,
-                offvalue=[],
-                width=100,
-                anchor="w",
-                bg="#DDCE84",
-                font=("Helvetica bold", 10),
-            )
-            x += 1
-            btn.pack()
+        for  i, food_item in enumerate(self.funcs):
+            self.funcs_dict[food_item] = Checkbutton(text=food_item, bg="#DDCE84")
+
+            # Create a new instance of IntVar() for each checkbutton
+            self.funcs_dict[food_item].var = IntVar()
+
+            # Set the variable parameter of the checkbutton
+            self.funcs_dict[food_item]['variable'] = self.funcs_dict[food_item].var
+
+            # Arrange the checkbutton in the window
+            self.funcs_dict[food_item].pack(anchor='w')
         Canvas(self.window, height=1, width=900, bg="yellow").pack()
         Label(
             self.window,
@@ -325,455 +323,463 @@ class Prog:
                 f"{table.get_string()}"
             )
 
+
+    def show333(self):
+        for cb in self.funcs_dict.values():
+            if cb.var.get():
+                print(cb['text'])
+
     @Decorators
     def show(self, pokaz_entry):
-        if self.flag:
-            Prog.pokaz_entry = pokaz_entry.get()
-            if Prog.funcs_dict[Prog.func_value.get()] == "Середнє арифметичне":
-                res = Prog.pokaz_entry.split(",")
-                for i in res:
-                    self.show_histo(
-                        read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[i.strip()]
-                            ],
-                        ),
-                        i.strip(),
-                    )
-                    value = average(
-                        read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[i.strip()]
-                            ],
+        for cb in self.funcs_dict.values():
+            if cb.var.get():
+                if self.flag:
+                    Prog.pokaz_entry = pokaz_entry.get()
+                    if cb['text'] == "Середнє арифметичне":
+                        res = Prog.pokaz_entry.split(",")
+                        for i in res:
+                            self.show_histo(
+                                read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[i.strip()]
+                                    ],
+                                ),
+                                i.strip(),
+                            )
+                            value = average(
+                                read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[i.strip()]
+                                    ],
+                                )
+                            )
+                            Prog.db.insert_arithmetic(
+                                amount=amount_n(
+                                    read_column_by_colname(
+                                        Prog.file_path,
+                                        read_excel_columnames(Prog.file_path)[
+                                            Prog.excel_columnames_dict[i.strip()]
+                                        ],
+                                    )
+                                ),
+                                measure=i.strip(),
+                                value=value,
+                            )
+                            Prog.db.get_rand_excel()
+                    elif cb['text'] == "Мінімальне значення":
+                        res = Prog.pokaz_entry.split(",")
+                        for i in res:
+                            self.show_histo(
+                                read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[i.strip()]
+                                    ],
+                                ),
+                                i.strip(),
+                            )
+                            Prog.db.insert_minimal(
+                                amount=amount_n(
+                                    read_column_by_colname(
+                                        Prog.file_path,
+                                        read_excel_columnames(Prog.file_path)[
+                                            Prog.excel_columnames_dict[i.strip()]
+                                        ],
+                                    )
+                                ),
+                                measure=i.strip(),
+                                value=minimal(
+                                    read_column_by_colname(
+                                        Prog.file_path,
+                                        read_excel_columnames(Prog.file_path)[
+                                            Prog.excel_columnames_dict[i.strip()]
+                                        ],
+                                    )
+                                ),
+                            )
+                            Prog.db.get_rand_excel()
+                    elif cb['text'] == "Максимальне значення":
+                        res = Prog.pokaz_entry.split(",")
+                        for i in res:
+                            self.show_histo(
+                                read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[i.strip()]
+                                    ],
+                                ),
+                                i.strip(),
+                            )
+                            Prog.db.insert_maximal(
+                                amount=amount_n(
+                                    read_column_by_colname(
+                                        Prog.file_path,
+                                        read_excel_columnames(Prog.file_path)[
+                                            Prog.excel_columnames_dict[i.strip()]
+                                        ],
+                                    )
+                                ),
+                                measure=i.strip(),
+                                value=maximal(
+                                    read_column_by_colname(
+                                        Prog.file_path,
+                                        read_excel_columnames(Prog.file_path)[
+                                            Prog.excel_columnames_dict[i.strip()]
+                                        ],
+                                    )
+                                ),
+                            )
+                            Prog.db.get_rand_excel()
+                    elif (
+                        cb['text']
+                        == "Середньоквадратичне відхилення по вибірці"
+                    ):
+                        res = Prog.pokaz_entry.split(",")
+                        for i in res:
+                            self.show_histo(
+                                read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[i.strip()]
+                                    ],
+                                ),
+                                i.strip(),
+                            )
+                            Prog.db.insert_deviation(
+                                amount=amount_n(
+                                    read_column_by_colname(
+                                        Prog.file_path,
+                                        read_excel_columnames(Prog.file_path)[
+                                            Prog.excel_columnames_dict[i.strip()]
+                                        ],
+                                    )
+                                ),
+                                measure=i.strip(),
+                                value=deviation(
+                                    read_column_by_colname(
+                                        Prog.file_path,
+                                        read_excel_columnames(Prog.file_path)[
+                                            Prog.excel_columnames_dict[i.strip()]
+                                        ],
+                                    )
+                                ),
+                            )
+                            Prog.db.get_rand_excel()
+                    elif cb['text'] == "Коефіцієнт варіації":
+                        res = Prog.pokaz_entry.split(",")
+                        for i in res:
+                            self.show_histo(
+                                read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[i.strip()]
+                                    ],
+                                ),
+                                i.strip(),
+                            )
+                            Prog.db.insert_variation(
+                                amount=amount_n(
+                                    read_column_by_colname(
+                                        Prog.file_path,
+                                        read_excel_columnames(Prog.file_path)[
+                                            Prog.excel_columnames_dict[i.strip()]
+                                        ],
+                                    )
+                                ),
+                                measure=i.strip(),
+                                value=variation(
+                                    read_column_by_colname(
+                                        Prog.file_path,
+                                        read_excel_columnames(Prog.file_path)[
+                                            Prog.excel_columnames_dict[i.strip()]
+                                        ],
+                                    )
+                                ),
+                            )
+                            Prog.db.get_rand_excel()
+                    elif cb['text'] == "Помилка середнього":
+                        res = Prog.pokaz_entry.split(",")
+                        for i in res:
+                            self.show_histo(
+                                read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[i.strip()]
+                                    ],
+                                ),
+                                i.strip(),
+                            )
+                            Prog.db.insert_error(
+                                amount=amount_n(
+                                    read_column_by_colname(
+                                        Prog.file_path,
+                                        read_excel_columnames(Prog.file_path)[
+                                            Prog.excel_columnames_dict[i.strip()]
+                                        ],
+                                    )
+                                ),
+                                measure=i.strip(),
+                                value=std_error(
+                                    read_column_by_colname(
+                                        Prog.file_path,
+                                        read_excel_columnames(Prog.file_path)[
+                                            Prog.excel_columnames_dict[i.strip()]
+                                        ],
+                                    )
+                                ),
+                            )
+                            Prog.db.get_rand_excel()
+                    elif cb['text'] == "Коваріація":
+                        val = Prog.pokaz_entry.split(",")
+                        res = str(val[0]) + " " + str(val[1])
+                        self.cor_graph(
+                            read_column_by_colname(
+                                Prog.file_path,
+                                read_excel_columnames(Prog.file_path)[
+                                    Prog.excel_columnames_dict[val[0].strip()]
+                                ],
+                            ),
+                            read_column_by_colname(
+                                Prog.file_path,
+                                read_excel_columnames(Prog.file_path)[
+                                    Prog.excel_columnames_dict[val[1].strip()]
+                                ],
+                            ),
+                            res,
                         )
-                    )
-                    Prog.db.insert_arithmetic(
-                        amount=amount_n(
-                            read_column_by_colname(
-                                Prog.file_path,
-                                read_excel_columnames(Prog.file_path)[
-                                    Prog.excel_columnames_dict[i.strip()]
-                                ],
-                            )
-                        ),
-                        measure=i.strip(),
-                        value=value,
-                    )
-                    Prog.db.get_rand_excel()
-            elif Prog.funcs_dict[Prog.func_value.get()] == "Мінімальне значення":
-                res = Prog.pokaz_entry.split(",")
-                for i in res:
-                    self.show_histo(
-                        read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[i.strip()]
-                            ],
-                        ),
-                        i.strip(),
-                    )
-                    Prog.db.insert_minimal(
-                        amount=amount_n(
-                            read_column_by_colname(
-                                Prog.file_path,
-                                read_excel_columnames(Prog.file_path)[
-                                    Prog.excel_columnames_dict[i.strip()]
-                                ],
-                            )
-                        ),
-                        measure=i.strip(),
-                        value=minimal(
-                            read_column_by_colname(
-                                Prog.file_path,
-                                read_excel_columnames(Prog.file_path)[
-                                    Prog.excel_columnames_dict[i.strip()]
-                                ],
-                            )
-                        ),
-                    )
-                    Prog.db.get_rand_excel()
-            elif Prog.funcs_dict[Prog.func_value.get()] == "Максимальне значення":
-                res = Prog.pokaz_entry.split(",")
-                for i in res:
-                    self.show_histo(
-                        read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[i.strip()]
-                            ],
-                        ),
-                        i.strip(),
-                    )
-                    Prog.db.insert_maximal(
-                        amount=amount_n(
-                            read_column_by_colname(
-                                Prog.file_path,
-                                read_excel_columnames(Prog.file_path)[
-                                    Prog.excel_columnames_dict[i.strip()]
-                                ],
-                            )
-                        ),
-                        measure=i.strip(),
-                        value=maximal(
-                            read_column_by_colname(
-                                Prog.file_path,
-                                read_excel_columnames(Prog.file_path)[
-                                    Prog.excel_columnames_dict[i.strip()]
-                                ],
-                            )
-                        ),
-                    )
-                    Prog.db.get_rand_excel()
-            elif (
-                Prog.funcs_dict[Prog.func_value.get()]
-                == "Середньоквадратичне відхилення по вибірці"
-            ):
-                res = Prog.pokaz_entry.split(",")
-                for i in res:
-                    self.show_histo(
-                        read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[i.strip()]
-                            ],
-                        ),
-                        i.strip(),
-                    )
-                    Prog.db.insert_deviation(
-                        amount=amount_n(
-                            read_column_by_colname(
-                                Prog.file_path,
-                                read_excel_columnames(Prog.file_path)[
-                                    Prog.excel_columnames_dict[i.strip()]
-                                ],
-                            )
-                        ),
-                        measure=i.strip(),
-                        value=deviation(
-                            read_column_by_colname(
-                                Prog.file_path,
-                                read_excel_columnames(Prog.file_path)[
-                                    Prog.excel_columnames_dict[i.strip()]
-                                ],
-                            )
-                        ),
-                    )
-                    Prog.db.get_rand_excel()
-            elif Prog.funcs_dict[Prog.func_value.get()] == "Коефіцієнт варіації":
-                res = Prog.pokaz_entry.split(",")
-                for i in res:
-                    self.show_histo(
-                        read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[i.strip()]
-                            ],
-                        ),
-                        i.strip(),
-                    )
-                    Prog.db.insert_variation(
-                        amount=amount_n(
-                            read_column_by_colname(
-                                Prog.file_path,
-                                read_excel_columnames(Prog.file_path)[
-                                    Prog.excel_columnames_dict[i.strip()]
-                                ],
-                            )
-                        ),
-                        measure=i.strip(),
-                        value=variation(
-                            read_column_by_colname(
-                                Prog.file_path,
-                                read_excel_columnames(Prog.file_path)[
-                                    Prog.excel_columnames_dict[i.strip()]
-                                ],
-                            )
-                        ),
-                    )
-                    Prog.db.get_rand_excel()
-            elif Prog.funcs_dict[Prog.func_value.get()] == "Помилка середнього":
-                res = Prog.pokaz_entry.split(",")
-                for i in res:
-                    self.show_histo(
-                        read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[i.strip()]
-                            ],
-                        ),
-                        i.strip(),
-                    )
-                    Prog.db.insert_error(
-                        amount=amount_n(
-                            read_column_by_colname(
-                                Prog.file_path,
-                                read_excel_columnames(Prog.file_path)[
-                                    Prog.excel_columnames_dict[i.strip()]
-                                ],
-                            )
-                        ),
-                        measure=i.strip(),
-                        value=std_error(
-                            read_column_by_colname(
-                                Prog.file_path,
-                                read_excel_columnames(Prog.file_path)[
-                                    Prog.excel_columnames_dict[i.strip()]
-                                ],
-                            )
-                        ),
-                    )
-                    Prog.db.get_rand_excel()
-            elif Prog.funcs_dict[Prog.func_value.get()] == "Коваріація":
-                val = Prog.pokaz_entry.split(",")
-                res = str(val[0]) + " " + str(val[1])
-                self.cor_graph(
-                    read_column_by_colname(
-                        Prog.file_path,
-                        read_excel_columnames(Prog.file_path)[
-                            Prog.excel_columnames_dict[val[0].strip()]
-                        ],
-                    ),
-                    read_column_by_colname(
-                        Prog.file_path,
-                        read_excel_columnames(Prog.file_path)[
-                            Prog.excel_columnames_dict[val[1].strip()]
-                        ],
-                    ),
-                    res,
-                )
-                Prog.db.insert_covariance(
-                    amount=amount_n(
-                        read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[val[0].strip()]
-                            ],
+                        Prog.db.insert_covariance(
+                            amount=amount_n(
+                                read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[val[0].strip()]
+                                    ],
+                                )
+                            ),
+                            measure=Prog.pokaz_entry,
+                            value=covariance(
+                                data_x=read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[val[0].strip()]
+                                    ],
+                                ),
+                                data_y=read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[val[1].strip()]
+                                    ],
+                                ),
+                            ),
                         )
-                    ),
-                    measure=Prog.pokaz_entry,
-                    value=covariance(
-                        data_x=read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[val[0].strip()]
-                            ],
-                        ),
-                        data_y=read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[val[1].strip()]
-                            ],
-                        ),
-                    ),
-                )
-                Prog.db.get_rand2_excel()
-            elif (
-                Prog.funcs_dict[Prog.func_value.get()] == "Коефіцієнт кореляції Пірсона"
-            ):
-                val = Prog.pokaz_entry.split(",")
-                res = str(val[0]) + " " + str(val[1])
-                self.cor_graph(
-                    read_column_by_colname(
-                        Prog.file_path,
-                        read_excel_columnames(Prog.file_path)[
-                            Prog.excel_columnames_dict[val[0].strip()]
-                        ],
-                    ),
-                    read_column_by_colname(
-                        Prog.file_path,
-                        read_excel_columnames(Prog.file_path)[
-                            Prog.excel_columnames_dict[val[1].strip()]
-                        ],
-                    ),
-                    res,
-                )
-                Prog.db.insert_pearson(
-                    amount=amount_n(
-                        read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[val[0].strip()]
-                            ],
+                        Prog.db.get_rand2_excel()
+                    elif (
+                        cb['text'] == "Коефіцієнт кореляції Пірсона"
+                    ):
+                        val = Prog.pokaz_entry.split(",")
+                        res = str(val[0]) + " " + str(val[1])
+                        self.cor_graph(
+                            read_column_by_colname(
+                                Prog.file_path,
+                                read_excel_columnames(Prog.file_path)[
+                                    Prog.excel_columnames_dict[val[0].strip()]
+                                ],
+                            ),
+                            read_column_by_colname(
+                                Prog.file_path,
+                                read_excel_columnames(Prog.file_path)[
+                                    Prog.excel_columnames_dict[val[1].strip()]
+                                ],
+                            ),
+                            res,
                         )
-                    ),
-                    measure=Prog.pokaz_entry,
-                    value=pearson(
-                        data_x=read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[val[0].strip()]
-                            ],
-                        ),
-                        data_y=read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[val[1].strip()]
-                            ],
-                        ),
-                    ),
-                )
-                Prog.db.get_rand2_excel()
-            elif Prog.funcs_dict[Prog.func_value.get()] == "Т-критерий Стюдента":
-                val = Prog.pokaz_entry.split(",")
-                res = str(val[0]) + " " + str(val[1])
-                self.cor_graph(
-                    read_column_by_colname(
-                        Prog.file_path,
-                        read_excel_columnames(Prog.file_path)[
-                            Prog.excel_columnames_dict[val[0].strip()]
-                        ],
-                    ),
-                    read_column_by_colname(
-                        Prog.file_path,
-                        read_excel_columnames(Prog.file_path)[
-                            Prog.excel_columnames_dict[val[1].strip()]
-                        ],
-                    ),
-                    res,
-                )
-                Prog.db.insert_t_test(
-                    amount=amount_n(
-                        read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[val[0].strip()]
-                            ],
+                        Prog.db.insert_pearson(
+                            amount=amount_n(
+                                read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[val[0].strip()]
+                                    ],
+                                )
+                            ),
+                            measure=Prog.pokaz_entry,
+                            value=pearson(
+                                data_x=read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[val[0].strip()]
+                                    ],
+                                ),
+                                data_y=read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[val[1].strip()]
+                                    ],
+                                ),
+                            ),
                         )
-                    ),
-                    measure=Prog.pokaz_entry,
-                    value=t_test(
-                        data_x=read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[val[0].strip()]
-                            ],
-                        ),
-                        data_y=read_column_by_colname(
-                            Prog.file_path,
-                            read_excel_columnames(Prog.file_path)[
-                                Prog.excel_columnames_dict[val[1].strip()]
-                            ],
-                        ),
-                    ),
-                )
-                Prog.db.get_rand2_excel()
-        else:
-            if Prog.func_value.get() == 0:
-                res = pokaz_entry.get().split(",")
-                for i in res:
-                    self.show_histo(
-                        self.db.get_list_all(self.bd_dict[i.strip()]), i.strip()
-                    )
-                    self.db.insert_arithmetic(
-                        len(self.db.get_list_all(self.bd_dict[i.strip()])),
-                        i.strip(),
-                        average(self.db.get_list_all(self.bd_dict[i.strip()])),
-                    )
-            elif Prog.func_value.get() == 1:
-                res = pokaz_entry.get().split(",")
-                for i in res:
-                    self.show_histo(
-                        self.db.get_list_all(self.bd_dict[i.strip()]), i.strip()
-                    )
-                    self.db.insert_minimal(
-                        len(self.db.get_list_all(self.bd_dict[i.strip()])),
-                        i.strip(),
-                        minimal(self.db.get_list_all(self.bd_dict[i.strip()])),
-                    )
-            elif Prog.func_value.get() == 2:
-                res = pokaz_entry.get().split(",")
-                for i in res:
-                    self.show_histo(
-                        self.db.get_list_all(self.bd_dict[i.strip()]), i.strip()
-                    )
-                    self.db.insert_maximal(
-                        len(self.db.get_list_all(self.bd_dict[i.strip()])),
-                        i.strip(),
-                        maximal(self.db.get_list_all(self.bd_dict[i.strip()])),
-                    )
-            elif Prog.func_value.get() == 3:
-                res = pokaz_entry.get().split(",")
-                for i in res:
-                    self.show_histo(
-                        self.db.get_list_all(self.bd_dict[i.strip()]), i.strip()
-                    )
-                    self.db.insert_deviation(
-                        len(self.db.get_list_all(self.bd_dict[i.strip()])),
-                        i.strip(),
-                        deviation(self.db.get_list_all(self.bd_dict[i.strip()])),
-                    )
-            elif Prog.func_value.get() == 4:
-                res = pokaz_entry.get().split(",")
-                for i in res:
-                    self.show_histo(
-                        self.db.get_list_all(self.bd_dict[i.strip()]), i.strip()
-                    )
-                    self.db.insert_variation(
-                        len(self.db.get_list_all(self.bd_dict[i.strip()])),
-                        i.strip(),
-                        variation(self.db.get_list_all(self.bd_dict[i.strip()])),
-                    )
-            elif Prog.func_value.get() == 5:
-                res = pokaz_entry.get().split(",")
-                for i in res:
-                    self.show_histo(
-                        self.db.get_list_all(self.bd_dict[i.strip()]), i.strip()
-                    )
-                    self.db.insert_error(
-                        len(self.db.get_list_all(self.bd_dict[i.strip()])),
-                        i.strip(),
-                        std_error(self.db.get_list_all(self.bd_dict[i.strip()])),
-                    )
-            elif Prog.func_value.get() == 6:
-                val = pokaz_entry.get().split(",")
-                res = str(val[0]) + " " + str(val[1])
-                self.cor_graph(
-                    self.db.get_list_all(self.bd_dict[val[0].strip()]),
-                    self.db.get_list_all(self.bd_dict[val[1].strip()]),
-                    res,
-                )
-                self.db.insert_covariance(
-                    len(self.db.get_list_all(self.bd_dict[val[0].strip()])),
-                    pokaz_entry.get(),
-                    covariance(
-                        self.db.get_list_all(self.bd_dict[val[0].strip()]),
-                        self.db.get_list_all(self.bd_dict[val[1].strip()]),
-                    ),
-                )
-            elif Prog.func_value.get() == 7:
-                val = pokaz_entry.get().split(",")
-                res = str(val[0]) + " " + str(val[1])
-                self.cor_graph(
-                    self.db.get_list_all(self.bd_dict[val[0].strip()]),
-                    self.db.get_list_all(self.bd_dict[val[1].strip()]),
-                    res,
-                )
-                self.db.insert_pearson(
-                    len(self.db.get_list_all(self.bd_dict[val[0].strip()])),
-                    pokaz_entry.get(),
-                    pearson(
-                        self.db.get_list_all(self.bd_dict[val[0].strip()]),
-                        self.db.get_list_all(self.bd_dict[val[1].strip()]),
-                    ),
-                )
-            elif Prog.func_value.get() == 8:
-                val = pokaz_entry.get().split(",")
-                res = str(val[0]) + " " + str(val[1])
-                self.cor_graph(
-                    self.db.get_list_all(self.bd_dict[val[0].strip()]),
-                    self.db.get_list_all(self.bd_dict[val[1].strip()]),
-                    res,
-                )
-                self.db.insert_t_test(
-                    len(self.db.get_list_all(self.bd_dict[val[0].strip()])),
-                    pokaz_entry.get(),
-                    t_test(
-                        self.db.get_list_all(self.bd_dict[val[0].strip()]),
-                        self.db.get_list_all(self.bd_dict[val[1].strip()]),
-                    ),
-                )
+                        Prog.db.get_rand2_excel()
+                    elif cb['text'] == "Т-критерий Стюдента":
+                        val = Prog.pokaz_entry.split(",")
+                        res = str(val[0]) + " " + str(val[1])
+                        self.cor_graph(
+                            read_column_by_colname(
+                                Prog.file_path,
+                                read_excel_columnames(Prog.file_path)[
+                                    Prog.excel_columnames_dict[val[0].strip()]
+                                ],
+                            ),
+                            read_column_by_colname(
+                                Prog.file_path,
+                                read_excel_columnames(Prog.file_path)[
+                                    Prog.excel_columnames_dict[val[1].strip()]
+                                ],
+                            ),
+                            res,
+                        )
+                        Prog.db.insert_t_test(
+                            amount=amount_n(
+                                read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[val[0].strip()]
+                                    ],
+                                )
+                            ),
+                            measure=Prog.pokaz_entry,
+                            value=t_test(
+                                data_x=read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[val[0].strip()]
+                                    ],
+                                ),
+                                data_y=read_column_by_colname(
+                                    Prog.file_path,
+                                    read_excel_columnames(Prog.file_path)[
+                                        Prog.excel_columnames_dict[val[1].strip()]
+                                    ],
+                                ),
+                            ),
+                        )
+                        Prog.db.get_rand2_excel()
+                else:
+                    if cb['text'] == "Середнє арифметичне":
+                        res = pokaz_entry.get().split(",")
+                        for i in res:
+                            self.show_histo(
+                                self.db.get_list_all(self.bd_dict[i.strip()]), i.strip()
+                            )
+                            self.db.insert_arithmetic(
+                                len(self.db.get_list_all(self.bd_dict[i.strip()])),
+                                i.strip(),
+                                average(self.db.get_list_all(self.bd_dict[i.strip()])),
+                            )
+                    elif cb['text'] == "Мінімальне значення":
+                        res = pokaz_entry.get().split(",")
+                        for i in res:
+                            self.show_histo(
+                                self.db.get_list_all(self.bd_dict[i.strip()]), i.strip()
+                            )
+                            self.db.insert_minimal(
+                                len(self.db.get_list_all(self.bd_dict[i.strip()])),
+                                i.strip(),
+                                minimal(self.db.get_list_all(self.bd_dict[i.strip()])),
+                            )
+                    elif cb['text'] == "Максимальне значення":
+                        res = pokaz_entry.get().split(",")
+                        for i in res:
+                            self.show_histo(
+                                self.db.get_list_all(self.bd_dict[i.strip()]), i.strip()
+                            )
+                            self.db.insert_maximal(
+                                len(self.db.get_list_all(self.bd_dict[i.strip()])),
+                                i.strip(),
+                                maximal(self.db.get_list_all(self.bd_dict[i.strip()])),
+                            )
+                    elif cb['text'] == "Середньоквадратичне відхилення по вибірці":
+                        res = pokaz_entry.get().split(",")
+                        for i in res:
+                            self.show_histo(
+                                self.db.get_list_all(self.bd_dict[i.strip()]), i.strip()
+                            )
+                            self.db.insert_deviation(
+                                len(self.db.get_list_all(self.bd_dict[i.strip()])),
+                                i.strip(),
+                                deviation(self.db.get_list_all(self.bd_dict[i.strip()])),
+                            )
+                    elif cb['text'] == "Коефіцієнт варіації":
+                        res = pokaz_entry.get().split(",")
+                        for i in res:
+                            self.show_histo(
+                                self.db.get_list_all(self.bd_dict[i.strip()]), i.strip()
+                            )
+                            self.db.insert_variation(
+                                len(self.db.get_list_all(self.bd_dict[i.strip()])),
+                                i.strip(),
+                                variation(self.db.get_list_all(self.bd_dict[i.strip()])),
+                            )
+                    elif cb['text'] == "Помилка середнього":
+                        res = pokaz_entry.get().split(",")
+                        for i in res:
+                            self.show_histo(
+                                self.db.get_list_all(self.bd_dict[i.strip()]), i.strip()
+                            )
+                            self.db.insert_error(
+                                len(self.db.get_list_all(self.bd_dict[i.strip()])),
+                                i.strip(),
+                                std_error(self.db.get_list_all(self.bd_dict[i.strip()])),
+                            )
+                    elif cb['text'] == "Коваріація":
+                        val = pokaz_entry.get().split(",")
+                        res = str(val[0]) + " " + str(val[1])
+                        self.cor_graph(
+                            self.db.get_list_all(self.bd_dict[val[0].strip()]),
+                            self.db.get_list_all(self.bd_dict[val[1].strip()]),
+                            res,
+                        )
+                        self.db.insert_covariance(
+                            len(self.db.get_list_all(self.bd_dict[val[0].strip()])),
+                            pokaz_entry.get(),
+                            covariance(
+                                self.db.get_list_all(self.bd_dict[val[0].strip()]),
+                                self.db.get_list_all(self.bd_dict[val[1].strip()]),
+                            ),
+                        )
+                    elif cb['text'] == "Коефіцієнт кореляції Пірсона":
+                        val = pokaz_entry.get().split(",")
+                        res = str(val[0]) + " " + str(val[1])
+                        self.cor_graph(
+                            self.db.get_list_all(self.bd_dict[val[0].strip()]),
+                            self.db.get_list_all(self.bd_dict[val[1].strip()]),
+                            res,
+                        )
+                        self.db.insert_pearson(
+                            len(self.db.get_list_all(self.bd_dict[val[0].strip()])),
+                            pokaz_entry.get(),
+                            pearson(
+                                self.db.get_list_all(self.bd_dict[val[0].strip()]),
+                                self.db.get_list_all(self.bd_dict[val[1].strip()]),
+                            ),
+                        )
+                    elif cb['text'] == "Т-критерий Стюдента":
+                        val = pokaz_entry.get().split(",")
+                        res = str(val[0]) + " " + str(val[1])
+                        self.cor_graph(
+                            self.db.get_list_all(self.bd_dict[val[0].strip()]),
+                            self.db.get_list_all(self.bd_dict[val[1].strip()]),
+                            res,
+                        )
+                        self.db.insert_t_test(
+                            len(self.db.get_list_all(self.bd_dict[val[0].strip()])),
+                            pokaz_entry.get(),
+                            t_test(
+                                self.db.get_list_all(self.bd_dict[val[0].strip()]),
+                                self.db.get_list_all(self.bd_dict[val[1].strip()]),
+                            ),
+                        )
 
     def show_histo(self, data, name):
         plt.hist(data, bins=20, alpha=0.5)
@@ -814,3 +820,4 @@ class Prog:
         Prog.window.mainloop()
 
 
+p = Prog()
