@@ -71,15 +71,44 @@ class FirstDb:
             )
         return "Таблиця готова до роботи"
 
-    def insert_user(self, name, age, ap, height, weight, bloodgroup, bloodsugar, ats, atd, pat, ataverage, breathlessness, indketle, indkerdo):
+    def insert_user(
+        self,
+        name,
+        age,
+        ap,
+        height,
+        weight,
+        bloodgroup,
+        bloodsugar,
+        ats,
+        atd,
+        pat,
+        ataverage,
+        breathlessness,
+        indketle,
+        indkerdo,
+    ):
         with self.connection.cursor() as cursor:
             cursor.execute(
                 """INSERT INTO full_info_excel (name, age, ap, height, weight, bloodgroup, bloodsugar, ats, atd, pat, ataverage, breathlessness, indketle, indkerdo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
-                (name, age, ap, height, weight, bloodgroup, bloodsugar, ats, atd, pat, ataverage, breathlessness, indketle, indkerdo,),
+                (
+                    name,
+                    age,
+                    ap,
+                    height,
+                    weight,
+                    bloodgroup,
+                    bloodsugar,
+                    ats,
+                    atd,
+                    pat,
+                    ataverage,
+                    breathlessness,
+                    indketle,
+                    indkerdo,
+                ),
             )
             self.connection.commit()
-
-
 
     def create_users_full_table(self):
         with self.connection.cursor() as cursor:
@@ -104,11 +133,14 @@ class FirstDb:
         return "Таблиця готова до роботи"
 
     def insert_full_excel(self, file_path):
-        engine = create_engine(f'postgresql+psycopg2://{os.getenv("USER")}:{os.getenv("PASSWORD")}@{os.getenv("HOST")}/{os.getenv("DB_NAME")}')
+        engine = create_engine(
+            f'postgresql+psycopg2://{os.getenv("USER")}:{os.getenv("PASSWORD")}@{os.getenv("HOST")}/{os.getenv("DB_NAME")}'
+        )
         with pd.ExcelFile(f"{file_path}") as xlsx:
             df = pd.read_excel(xlsx)
-            df.to_sql(name="full_info_excel", con=engine, if_exists="append", index=False)
-
+            df.to_sql(
+                name="full_info_excel", con=engine, if_exists="append", index=False
+            )
 
     def create_admin_table(self):
         with self.connection.cursor() as cursor:
@@ -133,7 +165,6 @@ class FirstDb:
             cursor.execute("""SELECT * FROM rand""")
             colnames = [desc[0] for desc in cursor.description]
         print(colnames)
-
 
     def check_if_excists_user(self, login):
         with self.connection.cursor() as cursor:
@@ -180,7 +211,6 @@ class FirstDb:
             result = cursor.fetchall()
         return bool(len(result))
 
-
     def check_if_exists_login_adm(self, login):
         with self.connection.cursor() as cursor:
             cursor.execute(
@@ -219,11 +249,44 @@ class FirstDb:
             )
             self.connection.commit()
 
-    def insert_user_login(self, name, age, ap, height, weight, bloodgroup, bloodsugar, ats, atd, pat, ataverage, breathlessness, indketle, indkerdo, login):
+    def insert_user_login(
+        self,
+        name,
+        age,
+        ap,
+        height,
+        weight,
+        bloodgroup,
+        bloodsugar,
+        ats,
+        atd,
+        pat,
+        ataverage,
+        breathlessness,
+        indketle,
+        indkerdo,
+        login,
+    ):
         with self.connection.cursor() as cursor:
             cursor.execute(
                 """INSERT INTO full_info_users (name, age, ap, height, weight, bloodgroup, bloodsugar, ats, atd, pat, ataverage, breathlessness, indketle, indkerdo, login) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
-                (name, age, ap, height, weight, bloodgroup, bloodsugar, ats, atd, pat, ataverage, breathlessness, indketle, indkerdo, login,),
+                (
+                    name,
+                    age,
+                    ap,
+                    height,
+                    weight,
+                    bloodgroup,
+                    bloodsugar,
+                    ats,
+                    atd,
+                    pat,
+                    ataverage,
+                    breathlessness,
+                    indketle,
+                    indkerdo,
+                    login,
+                ),
             )
             self.connection.commit()
 
@@ -492,7 +555,22 @@ class FirstDb:
             book = openpyxl.Workbook()
             sheet = book.active
             k = 1
-            for row in ["name", "age", "ap", "height", "weight", "bloodgroup", "bloodsugar", "ats", "atd", "pat", "ataverage", "breathlessness", "indketle", "indkerdo"]:
+            for row in [
+                "name",
+                "age",
+                "ap",
+                "height",
+                "weight",
+                "bloodgroup",
+                "bloodsugar",
+                "ats",
+                "atd",
+                "pat",
+                "ataverage",
+                "breathlessness",
+                "indketle",
+                "indkerdo",
+            ]:
                 cell = sheet.cell(row=1, column=k)
                 cell.value = row
                 k += 1
@@ -505,6 +583,7 @@ class FirstDb:
                     cell.value = col
                     j += 1
             book.save("Повний звіт.xlsx")
+
     def get_rand2_excel(self):
         with self.connection.cursor() as cursor:
             cursor.execute("""SELECT * FROM rand2""")
@@ -532,11 +611,8 @@ class FirstDb:
                     j += 1
             book.save("rand2.xlsx")
 
-
     def get_list_all(self, value):
         with self.connection.cursor() as cursor:
-            cursor.execute(
-                """SELECT * FROM full_info_excel;"""
-            )
+            cursor.execute("""SELECT * FROM full_info_excel;""")
             result = cursor.fetchall()
         return [i[value] for i in result]

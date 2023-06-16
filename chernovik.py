@@ -118,17 +118,17 @@ class Prog:
     @Decorators
     def rad_button(self):
         x = 0
-        for  i, food_item in enumerate(self.funcs):
+        for i, food_item in enumerate(self.funcs):
             self.funcs_dict[food_item] = Checkbutton(text=food_item, bg="#DDCE84")
 
             # Create a new instance of IntVar() for each checkbutton
             self.funcs_dict[food_item].var = IntVar()
 
             # Set the variable parameter of the checkbutton
-            self.funcs_dict[food_item]['variable'] = self.funcs_dict[food_item].var
+            self.funcs_dict[food_item]["variable"] = self.funcs_dict[food_item].var
 
             # Arrange the checkbutton in the window
-            self.funcs_dict[food_item].pack(anchor='w')
+            self.funcs_dict[food_item].pack(anchor="w")
         Canvas(self.window, height=1, width=900, bg="yellow").pack()
         Label(
             self.window,
@@ -323,11 +323,10 @@ class Prog:
                 f"{table.get_string()}"
             )
 
-
     def show333(self):
         for cb in self.funcs_dict.values():
             if cb.var.get():
-                print(cb['text'])
+                print(cb["text"])
 
     @Decorators
     def show(self, pokaz_entry):
@@ -335,7 +334,7 @@ class Prog:
             if cb.var.get():
                 if self.flag:
                     Prog.pokaz_entry = pokaz_entry.get()
-                    if cb['text'] == "Середнє арифметичне":
+                    if cb["text"] == "Середнє арифметичне":
                         res = Prog.pokaz_entry.split(",")
                         for i in res:
                             self.show_histo(
@@ -368,7 +367,7 @@ class Prog:
                                 value=value,
                             )
                             Prog.db.get_rand_excel()
-                    elif cb['text'] == "Мінімальне значення":
+                    elif cb["text"] == "Мінімальне значення":
                         res = Prog.pokaz_entry.split(",")
                         for i in res:
                             self.show_histo(
@@ -400,7 +399,7 @@ class Prog:
                                 ),
                             )
                             Prog.db.get_rand_excel()
-                    elif cb['text'] == "Максимальне значення":
+                    elif cb["text"] == "Максимальне значення":
                         res = Prog.pokaz_entry.split(",")
                         for i in res:
                             self.show_histo(
@@ -432,10 +431,7 @@ class Prog:
                                 ),
                             )
                             Prog.db.get_rand_excel()
-                    elif (
-                        cb['text']
-                        == "Середньоквадратичне відхилення по вибірці"
-                    ):
+                    elif cb["text"] == "Середньоквадратичне відхилення по вибірці":
                         res = Prog.pokaz_entry.split(",")
                         for i in res:
                             self.show_histo(
@@ -467,7 +463,7 @@ class Prog:
                                 ),
                             )
                             Prog.db.get_rand_excel()
-                    elif cb['text'] == "Коефіцієнт варіації":
+                    elif cb["text"] == "Коефіцієнт варіації":
                         res = Prog.pokaz_entry.split(",")
                         for i in res:
                             self.show_histo(
@@ -499,7 +495,7 @@ class Prog:
                                 ),
                             )
                             Prog.db.get_rand_excel()
-                    elif cb['text'] == "Помилка середнього":
+                    elif cb["text"] == "Помилка середнього":
                         res = Prog.pokaz_entry.split(",")
                         for i in res:
                             self.show_histo(
@@ -531,7 +527,7 @@ class Prog:
                                 ),
                             )
                             Prog.db.get_rand_excel()
-                    elif cb['text'] == "Коваріація":
+                    elif cb["text"] == "Коваріація":
                         val = Prog.pokaz_entry.split(",")
                         res = str(val[0]) + " " + str(val[1])
                         self.cor_graph(
@@ -575,9 +571,7 @@ class Prog:
                             ),
                         )
                         Prog.db.get_rand2_excel()
-                    elif (
-                        cb['text'] == "Коефіцієнт кореляції Пірсона"
-                    ):
+                    elif cb["text"] == "Коефіцієнт кореляції Пірсона":
                         val = Prog.pokaz_entry.split(",")
                         res = str(val[0]) + " " + str(val[1])
                         self.cor_graph(
@@ -621,7 +615,7 @@ class Prog:
                             ),
                         )
                         Prog.db.get_rand2_excel()
-                    elif cb['text'] == "Т-критерий Стюдента":
+                    elif cb["text"] == "Т-критерий Стюдента":
                         val = Prog.pokaz_entry.split(",")
                         res = str(val[0]) + " " + str(val[1])
                         self.cor_graph(
@@ -666,7 +660,7 @@ class Prog:
                         )
                         Prog.db.get_rand2_excel()
                 else:
-                    if cb['text'] == "Середнє арифметичне":
+                    if cb["text"] == "Середнє арифметичне":
                         res = pokaz_entry.get().split(",")
                         for i in res:
                             self.show_histo(
@@ -677,7 +671,7 @@ class Prog:
                                 i.strip(),
                                 average(self.db.get_list_all(self.bd_dict[i.strip()])),
                             )
-                    elif cb['text'] == "Мінімальне значення":
+                    elif cb["text"] == "Мінімальне значення":
                         res = pokaz_entry.get().split(",")
                         for i in res:
                             self.show_histo(
@@ -688,7 +682,7 @@ class Prog:
                                 i.strip(),
                                 minimal(self.db.get_list_all(self.bd_dict[i.strip()])),
                             )
-                    elif cb['text'] == "Максимальне значення":
+                    elif cb["text"] == "Максимальне значення":
                         res = pokaz_entry.get().split(",")
                         for i in res:
                             self.show_histo(
@@ -699,7 +693,7 @@ class Prog:
                                 i.strip(),
                                 maximal(self.db.get_list_all(self.bd_dict[i.strip()])),
                             )
-                    elif cb['text'] == "Середньоквадратичне відхилення по вибірці":
+                    elif cb["text"] == "Середньоквадратичне відхилення по вибірці":
                         res = pokaz_entry.get().split(",")
                         for i in res:
                             self.show_histo(
@@ -708,9 +702,11 @@ class Prog:
                             self.db.insert_deviation(
                                 len(self.db.get_list_all(self.bd_dict[i.strip()])),
                                 i.strip(),
-                                deviation(self.db.get_list_all(self.bd_dict[i.strip()])),
+                                deviation(
+                                    self.db.get_list_all(self.bd_dict[i.strip()])
+                                ),
                             )
-                    elif cb['text'] == "Коефіцієнт варіації":
+                    elif cb["text"] == "Коефіцієнт варіації":
                         res = pokaz_entry.get().split(",")
                         for i in res:
                             self.show_histo(
@@ -719,9 +715,11 @@ class Prog:
                             self.db.insert_variation(
                                 len(self.db.get_list_all(self.bd_dict[i.strip()])),
                                 i.strip(),
-                                variation(self.db.get_list_all(self.bd_dict[i.strip()])),
+                                variation(
+                                    self.db.get_list_all(self.bd_dict[i.strip()])
+                                ),
                             )
-                    elif cb['text'] == "Помилка середнього":
+                    elif cb["text"] == "Помилка середнього":
                         res = pokaz_entry.get().split(",")
                         for i in res:
                             self.show_histo(
@@ -730,9 +728,11 @@ class Prog:
                             self.db.insert_error(
                                 len(self.db.get_list_all(self.bd_dict[i.strip()])),
                                 i.strip(),
-                                std_error(self.db.get_list_all(self.bd_dict[i.strip()])),
+                                std_error(
+                                    self.db.get_list_all(self.bd_dict[i.strip()])
+                                ),
                             )
-                    elif cb['text'] == "Коваріація":
+                    elif cb["text"] == "Коваріація":
                         val = pokaz_entry.get().split(",")
                         res = str(val[0]) + " " + str(val[1])
                         self.cor_graph(
@@ -748,7 +748,7 @@ class Prog:
                                 self.db.get_list_all(self.bd_dict[val[1].strip()]),
                             ),
                         )
-                    elif cb['text'] == "Коефіцієнт кореляції Пірсона":
+                    elif cb["text"] == "Коефіцієнт кореляції Пірсона":
                         val = pokaz_entry.get().split(",")
                         res = str(val[0]) + " " + str(val[1])
                         self.cor_graph(
@@ -764,7 +764,7 @@ class Prog:
                                 self.db.get_list_all(self.bd_dict[val[1].strip()]),
                             ),
                         )
-                    elif cb['text'] == "Т-критерий Стюдента":
+                    elif cb["text"] == "Т-критерий Стюдента":
                         val = pokaz_entry.get().split(",")
                         res = str(val[0]) + " " + str(val[1])
                         self.cor_graph(

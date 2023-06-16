@@ -1,5 +1,6 @@
 # Імпортуємо модуль math
 import math
+
 # Імпортуємо pearsonr, ttest_ind з модулю scipy
 from scipy.stats import pearsonr, ttest_ind
 
@@ -62,7 +63,9 @@ def covariance(data_x: list, data_y: list) -> float:
     sub_x = [i - mean_x for i in data_x]
     sub_y = [i - mean_y for i in data_y]
     # Потім відбувається підсумовування cум відповідних елементів і результат ділиться на (n-1), де n - кількість елементів у списку data_x
-    return round(sum([sub_x[i] * sub_y[i] for i in range(len(sub_x))]) / (len(data_x) - 1), 2)
+    return round(
+        sum([sub_x[i] * sub_y[i] for i in range(len(sub_x))]) / (len(data_x) - 1), 2
+    )
 
 
 def pearson(data_x: list, data_y: list) -> float:
@@ -76,4 +79,3 @@ def t_test(data_x: list, data_y: list) -> str:
     res = str(round(t_statistic, 2)) + ", " + str(round(p_value, 2))
     # Повертає t-статистику та p-значення для t-тесту незалежних вибірок
     return res
-
