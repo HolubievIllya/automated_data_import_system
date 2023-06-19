@@ -19,6 +19,8 @@ retrieving a comprehensive report. For patients, the project also includes the c
 <img alt="Static Badge" src="https://img.shields.io/badge/pandas-D9B2BA">
 <img alt="Static Badge" src="https://img.shields.io/badge/functools-D6E3CF">
 <img alt="Static Badge" src="https://img.shields.io/badge/sqlalchemy-F1DCE0">
+<img alt="Static Badge" src="https://img.shields.io/badge/docker-78928E">
+<img alt="Static Badge" src="https://img.shields.io/badge/pstgreSQL-FFF2E9">
 
 </p>
 
